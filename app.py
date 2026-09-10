@@ -1,8 +1,8 @@
+%%writefile app.py
 
 import streamlit as st
 import pandas as pd
-import pickle
-import os
+import joblib
 
 st.set_page_config(
     page_title="Appliance Energy Prediction",
@@ -19,25 +19,15 @@ DATA_FILE = "appliance_energy.csv"
 # Load dataset
 try:
     data = pd.read_csv(DATA_FILE)
-    st.success("Dataset loaded successfully.")
 except Exception as e:
     st.error(f"Error loading dataset: {e}")
     st.stop()
 
-# Display dataset
-with st.expander("View Dataset"):
-    st.dataframe(data)
-
-# Load model
+# Load model using JOBLIB
 try:
-    with open(MODEL_FILE, "rb") as file:
-        model = pickle.load(file)
+    model = joblib.load(MODEL_FILE)
 except Exception as e:
     st.error(f"Error loading model: {e}")
-    st.info(
-        "The uploaded model file may not be a valid Python pickle file "
-        "or may have been created using a different serialization method."
-    )
     st.stop()
 
 st.subheader("Enter Temperature")
